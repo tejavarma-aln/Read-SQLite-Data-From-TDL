@@ -1,0 +1,98 @@
+
+	
+   ;; create a collection to acces sqlite db and read data
+   
+
+[Collection:SQLiteDBColl]
+	ODBC: "DRIVER=SQLite3 ODBC Driver;Database=D:\Db\CustomerInfo.db;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;" ;; connection string with db file name
+	SQL: "Select * from SundryDebtors" ;; Sql Query to access Debtors table
+	
+
+[Collection:CustomerDetails]
+	Source Collection:SQLiteDBColl
+	Compute:ID:$_1
+	Compute:Name:$_2
+	Compute:Address:$_3
+	Compute:State:$_4
+	Compute:Contact:$_5
+	Compute:Gst:$_6
+	
+;;let me quickly create a report
+	 
+ 
+ [#Menu:GateWayOfTally]
+	 Add:Item:Customers Info:Display:Customers Info 
+	 
+[Report:Customers Info ]
+	Form:Customers Info 
+	Title:"Customers Info "
+	
+[Form:Customers Info]
+	Part:Customers Info 
+	
+[Part:Customers Info ]
+	Line:CustomersColumn,CustomersBody
+	Repeat:CustomersBody:CustomerDetails
+	Width:100% page
+	Height:100% page
+	Scroll:Vertical
+	Common Border:Yes
+	
+[Line:CustomersColumn]
+	Border:ThickTopBottom
+	Space Top:0.5
+	Fields:CusID,CusName,CusAddress,CusState,CusContact,CusGst
+	Local:Field:CusID:Set as:"Id"
+	Local:Field:CusName:Set as:"Name"
+	Local:Field:CusAddress:Set as:"Address"
+	Local:Field:CusState:Set as:"State"
+	Local:Field:CusContact:Set as:"Contact"
+	Local:Field:CusGst:Set as:"Gst"
+	Local:Field:default:Border:thinright
+	Local:Field:default:Style:EmployeeHdStyle
+	Local:Field:default:Align:Left
+
+[Line:CustomersBody]
+	Fields:CusID,CusName,CusAddress,CusState,CusContact,CusGst
+	Border:thinbottom
+	Space Top:0.5
+	Local:Field:default:Style:EmployeeStyle
+	Local:Field:default:Align:Left
+	Local:Field:default:Border:thinright
+	
+[Field:CusID]
+	Set as:$Id
+	Width:20
+	
+[Field:CusName]
+	Set as:$Name
+	Width:30
+	
+[Field:CusAddress]
+	Set as:$Address
+	Width:20
+	
+[Field:CusState]
+	Set as:$State
+	Width:20
+	
+[Field:CusContact]
+	Set as:$Contact
+	Width:20
+	
+[Field:CusGst]
+	Set as:$Gst
+	Width:20
+	
+[Style:EmployeeStyle]
+	Font:"Sans-serif"
+	Height:12
+
+[Style:EmployeeHdStyle]
+	Font:"Sans-Serif"
+	Height:12
+	Bold:yes
+
+
+
+;; load and run
